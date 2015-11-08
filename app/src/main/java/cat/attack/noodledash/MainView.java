@@ -6,6 +6,7 @@ import android.view.*;
 import android.graphics.*;
 
 import java.util.Objects;
+import java.util.Random;
 
 
 /**
@@ -44,9 +45,12 @@ public class MainView extends View {
     protected void onDraw(Canvas canvas)
     {
         super.onDraw(canvas);
-        canvas.drawRect(0f, 0f, this.getWidth(), 70, mTitlePaint);
+        Random r = new Random();
 
-        canvas.drawText(Objects.toString(System.currentTimeMillis()), 50, 60,mTextPaint);
+        mTitlePaint.setColor(Color.rgb(r.nextInt(255),r.nextInt(255),r.nextInt(255)));
+        canvas.drawRect(0f, 0f, this.getWidth(), this.getHeight(), mTitlePaint);
+
+        canvas.drawText(Objects.toString(System.currentTimeMillis()), 50, 100,mTextPaint);
     }
 
 }

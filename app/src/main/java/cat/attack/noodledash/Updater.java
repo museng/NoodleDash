@@ -7,6 +7,9 @@ import cat.attack.noodledash.API.GameThread;
  */
 public class Updater extends GameThread {
     private MainView view;
+
+    private double targetFPS = 60.0;
+
     public Updater(MainView _view)
     {
         view = _view;
@@ -15,7 +18,7 @@ public class Updater extends GameThread {
     {
         view.postInvalidate();
         try {
-            Thread.sleep(16);
+            Thread.sleep((long)Math.floor(1000.0/targetFPS));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
