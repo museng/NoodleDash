@@ -15,13 +15,17 @@ import java.util.Random;
  */
 public class MainView extends View {
     private Paint mTextPaint;
-    private Paint mTitlePaint;
+    private Paint mFramePaint;
     private float fontSizeDP = 60.0f;
 
     private Updater updater;
+    public Controller controller;
     private InputHandler input;
 
-    private int x = 0;
+    private Bitmap frame;
+
+    public boolean drawn = false;
+    public boolean Updated = false;
 
     public MainView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,7 +34,25 @@ public class MainView extends View {
 
     public void endGame()
     {
+        controller.killThread();
         updater.killThread();
+    }
+
+    public void setFrame(Bitmap nextFrame)
+    {
+        frame = nextFrame;
+    }
+
+    private void paint(Canvas canvas)
+    {
+        double FPS = Math.floor(10000.0 / updater.lastFrame) / 10.0;
+        double FPSDraw = Math.floor(10000.0 / controller.execTime) / 10.0;
+        if(FPSDraw < FPS)
+        {
+            FPS = FPSDraw;
+        }
+        canvas.drawBitmap(frame,0,0,mFramePaint);
+        canvas.drawText("FPS: " + Objects.toString(FPS), 0, 60,mTextPaint);
     }
 
     private void init()
@@ -39,32 +61,36 @@ public class MainView extends View {
         mTextPaint.setColor(Color.BLACK);
         mTextPaint.setTextSize(fontSizeDP);
 
+        mFramePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mFramePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
         updater = new Updater(this);
+        controller = new Controller(this);
         input = new InputHandler(this);
 
         this.setOnTouchListener(input);
-
-        mTitlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTitlePaint.setColor(Color.GRAY);
-        mTitlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-
-
         updater.start();
+        controller.start();
     }
+
+    @Override
+    public void postInvalidate()
+    {
+        drawn = false;
+        super.postInvalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas)
     {
-        super.onDraw(canvas);
-        Random r = new Random();
+        drawn = true;
 
-        mTitlePaint.setColor(Color.rgb(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
-        canvas.drawRect(0f, 0f, this.getWidth(), this.getHeight(), mTitlePaint);
-        x = x + 1;
-        if(x > this.getWidth()) {
-            x = 0;
-        }
-        canvas.drawText(Objects.toString(System.currentTimeMillis()), x, 100,mTextPaint);
+        super.onDraw(canvas);
+
+        if(frame != null)
+            paint(canvas);
+
+
     }
 
 }

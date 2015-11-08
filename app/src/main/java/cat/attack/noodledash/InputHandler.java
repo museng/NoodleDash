@@ -16,7 +16,7 @@ public class InputHandler implements View.OnTouchListener {
         boolean result = false;
         if (view.equals(target)) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                target.endGame();
+                target.controller.player.jump();
             }
         }
         return result;
