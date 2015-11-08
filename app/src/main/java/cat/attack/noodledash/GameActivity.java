@@ -31,7 +31,27 @@ public class GameActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
 
-    private View mContentView;
+    private MainView mContentView;
+
+
+    @Override
+    public void finish()
+    {
+        mContentView.endGame();
+        super.finish();
+    }
+    @Override
+    public void onDestroy()
+    {
+        android.os.Process.killProcess(android.os.Process.myPid());
+        super.onDestroy();
+    }
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
