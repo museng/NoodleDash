@@ -13,12 +13,15 @@ import java.util.Random;
 /**
  * Created by kegan on 11/7/2015.
  */
-public class MainView extends View {
+public class MainView extends SurfaceView implements SurfaceHolder.Callback {
+    public MainView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
     private Paint mTextPaint;
     private Paint mFramePaint;
     private float fontSizeDP = 60.0f;
 
-    private Updater updater;
     public Controller controller;
     private InputHandler input;
 
@@ -27,21 +30,38 @@ public class MainView extends View {
     public boolean drawn = false;
     public boolean Updated = false;
 
-    public MainView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public void endGame()
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder)
     {
         controller.killThread();
-        updater.killThread();
     }
-
-    public void setFrame(Bitmap nextFrame)
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,int height)
     {
-        frame = nextFrame;
+        //--- On screen update
     }
+    @Override
+    public void surfaceCreated(SurfaceHolder holder)
+    {
+        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setColor(Color.BLACK);
+        mTextPaint.setTextSize(fontSizeDP);
+
+        mFramePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mFramePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        controller = new Controller(this);
+        input = new InputHandler(this);
+
+        this.setOnTouchListener(input);
+        controller.start();
+
+        Canvas UI = holder.lockCanvas();
+        UI.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(),R.drawable.test),this.getWidth(),this.getHeight(),false),0,0,mFramePaint);
+        holder.unlockCanvasAndPost(UI);
+
+    }
+   /*
 
     private void paint(Canvas canvas)
     {
@@ -55,42 +75,5 @@ public class MainView extends View {
         canvas.drawText("FPS: " + Objects.toString(FPS), 0, 60,mTextPaint);
     }
 
-    private void init()
-    {
-        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(Color.BLACK);
-        mTextPaint.setTextSize(fontSizeDP);
-
-        mFramePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mFramePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        updater = new Updater(this);
-        controller = new Controller(this);
-        input = new InputHandler(this);
-
-        this.setOnTouchListener(input);
-        updater.start();
-        controller.start();
-    }
-
-    @Override
-    public void postInvalidate()
-    {
-        drawn = false;
-        super.postInvalidate();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas)
-    {
-        drawn = true;
-
-        super.onDraw(canvas);
-
-        if(frame != null)
-            paint(canvas);
-
-
-    }
-
+    */
 }

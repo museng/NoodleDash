@@ -9,6 +9,7 @@ public class Controller extends GameThread {
     private MainView view;
     private Paint basePaint;
     public Player player;
+    private long start;
 
     public long execTime;
 
@@ -18,17 +19,27 @@ public class Controller extends GameThread {
         player = new Player(_view);
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         basePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        start = System.currentTimeMillis() + 10000;
     }
     @Override
     protected void loop()
     {
         long time = System.currentTimeMillis();
-        //--- dont draw the Ui while the app is in the process of opening
+
         if(view.getWidth() > 0 && view.getHeight() > 0) {
-            Bitmap  b = Bitmap.createBitmap(view.getWidth(),view.getHeight(),Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(b);
-            prepScreen(canvas);
-            view.setFrame(b);
+            if(!player.started && System.currentTimeMillis() > start)
+            {
+                player.start();
+            }
+            if(!player.started)
+            {
+                view.setFrame(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(),R.drawable.test),view.getWidth(),view.getHeight(),false));
+            } else {
+                Bitmap b = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(b);
+                prepScreen(canvas);
+                view.setFrame(b);
+            }
         }
         //--- wait until the next loop is processed
         while(!view.Updated) {}
