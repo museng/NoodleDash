@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 
 /**
@@ -37,13 +38,12 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public void finish()
     {
-        mContentView.endGame();
         super.finish();
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
     @Override
     public void onDestroy()
     {
-        android.os.Process.killProcess(android.os.Process.myPid());
         super.onDestroy();
     }
     @Override

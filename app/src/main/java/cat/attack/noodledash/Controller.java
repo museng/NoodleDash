@@ -1,6 +1,8 @@
 package cat.attack.noodledash;
 
 import android.graphics.*;
+import android.view.SurfaceHolder;
+
 import cat.attack.noodledash.API.GameThread;
 /**
  * Created by kegan on 11/8/2015.
@@ -10,6 +12,7 @@ public class Controller extends GameThread {
     private Paint basePaint;
     public Player player;
     private long start;
+    private SurfaceHolder holder;
 
     public long execTime;
 
@@ -20,37 +23,30 @@ public class Controller extends GameThread {
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         basePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         start = System.currentTimeMillis() + 10000;
+        holder = view.getHolder();
     }
     @Override
     protected void loop()
     {
-        long time = System.currentTimeMillis();
 
-        if(view.getWidth() > 0 && view.getHeight() > 0) {
-            if(!player.started && System.currentTimeMillis() > start)
+        Canvas canvas = null;
+        try {
+            canvas = holder.lockCanvas();
+            if(canvas != null)
             {
-                player.start();
-            }
-            if(!player.started)
-            {
-                view.setFrame(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(),R.drawable.test),view.getWidth(),view.getHeight(),false));
-            } else {
-                Bitmap b = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(b);
                 prepScreen(canvas);
-                view.setFrame(b);
+            }
+        } finally {
+            if(canvas != null)
+            {
+                holder.unlockCanvasAndPost(canvas);
             }
         }
-        //--- wait until the next loop is processed
-        while(!view.Updated) {}
-        view.Updated = false;
-        execTime = System.currentTimeMillis() - time;
-        player.update(execTime);
     }
 
     private void prepScreen(Canvas canvas)
     {
-        //--- Draw elements onto the screen here
-        canvas.drawBitmap(player.getDisplay(),player.getPosition().x,player.getPosition().y,basePaint);
+        canvas.drawColor(Color.BLACK);
+        canvas.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.test), view.getWidth(), view.getHeight(), false),0,0,basePaint);
     }
 }

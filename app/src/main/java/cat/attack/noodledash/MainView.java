@@ -15,20 +15,20 @@ import java.util.Random;
  */
 public class MainView extends SurfaceView implements SurfaceHolder.Callback {
     public MainView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
 
-    private Paint mTextPaint;
-    private Paint mFramePaint;
-    private float fontSizeDP = 60.0f;
+        super(context, attrs);
+
+        controller = new Controller(this);
+        input = new InputHandler(this);
+
+
+        this.setBackgroundColor(Color.argb(0,0,0,0));
+        this.getHolder().setKeepScreenOn(true);
+        this.getHolder().addCallback(this);
+    }
 
     public Controller controller;
     private InputHandler input;
-
-    private Bitmap frame;
-
-    public boolean drawn = false;
-    public boolean Updated = false;
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder)
@@ -39,27 +39,13 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width,int height)
     {
         //--- On screen update
+
     }
     @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
-        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(Color.BLACK);
-        mTextPaint.setTextSize(fontSizeDP);
-
-        mFramePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mFramePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        controller = new Controller(this);
-        input = new InputHandler(this);
-
         this.setOnTouchListener(input);
         controller.start();
-
-        Canvas UI = holder.lockCanvas();
-        UI.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(this.getResources(),R.drawable.test),this.getWidth(),this.getHeight(),false),0,0,mFramePaint);
-        holder.unlockCanvasAndPost(UI);
-
     }
    /*
 
