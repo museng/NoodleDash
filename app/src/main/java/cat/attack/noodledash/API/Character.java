@@ -8,7 +8,7 @@ import android.graphics.drawable.*;
 
 import cat.attack.noodledash.MainView;
 
-public abstract class Character {
+public abstract class Character extends Element {
     private double vX;
     private double vY;
     private double vXms;
@@ -42,6 +42,7 @@ public abstract class Character {
 
     public Character(MainView _view,int resource,int _x,int _y)
     {
+        super(_x,_y,0,0);
         view = _view;
         updateResource(resource);
         x = _x;
@@ -52,11 +53,14 @@ public abstract class Character {
         aY = 0;
         updateVms();
         updateAms();
+        //--- update bounds after element is finished
+        super.setBounds(_x,_y,display.getWidth(),display.getHeight());
     }
     public void setPosition(double _x,double _y)
     {
         x = _x;
         y = _y;
+        super.setBounds((int)_x,(int)_y,display.getWidth(),display.getHeight());
     }
     public void setVelocity(double _vX,double _vY)
     {
@@ -80,6 +84,7 @@ public abstract class Character {
 
         x += vXms*frameTime;
         y += vYms*frameTime;
+        super.setBounds((int)x,(int)y,display.getWidth(),display.getHeight());
 
 
         onUpdate(frameTime);

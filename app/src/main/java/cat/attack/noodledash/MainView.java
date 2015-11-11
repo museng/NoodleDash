@@ -18,48 +18,40 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
         super(context, attrs);
 
+        // --- Initialize other classes
         controller = new Controller(this);
         input = new InputHandler(this);
 
 
-        this.setBackgroundColor(Color.argb(0,0,0,0));
-        this.getHolder().setKeepScreenOn(true);
-        this.getHolder().addCallback(this);
+        this.setBackgroundColor(Color.argb(0,0,0,0)); // --- Remove this & surfaceview will not be visible
+        this.getHolder().setKeepScreenOn(true); // --- just so the screen doesnt turn off in game
+        this.getHolder().addCallback(this); // --- Initialize the callback
     }
 
     public Controller controller;
     private InputHandler input;
 
+
+    // --- On game exit, kill threads
     @Override
     public void surfaceDestroyed(SurfaceHolder holder)
     {
         controller.killThread();
     }
+
+    // --- we may be able to do something with this, idk
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width,int height)
     {
         //--- On screen update
 
     }
+
+    // --- On game start, init threads & eventhandlers
     @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
         this.setOnTouchListener(input);
         controller.start();
     }
-   /*
-
-    private void paint(Canvas canvas)
-    {
-        double FPS = Math.floor(10000.0 / updater.lastFrame) / 10.0;
-        double FPSDraw = Math.floor(10000.0 / controller.execTime) / 10.0;
-        if(FPSDraw < FPS)
-        {
-            FPS = FPSDraw;
-        }
-        canvas.drawBitmap(frame,0,0,mFramePaint);
-        canvas.drawText("FPS: " + Objects.toString(FPS), 0, 60,mTextPaint);
-    }
-
-    */
 }

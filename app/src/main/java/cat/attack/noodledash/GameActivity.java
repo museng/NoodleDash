@@ -34,7 +34,7 @@ public class GameActivity extends AppCompatActivity {
 
     private MainView mContentView;
 
-
+    //--- These next there handle when the game is exiting, kill the process (no more game)
     @Override
     public void finish()
     {
@@ -60,6 +60,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         mContentView = (MainView)findViewById(R.id.fullscreen_content);
+        mContentView.controller.setWindowManager(getWindowManager());
     }
 
     @Override
