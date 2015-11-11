@@ -105,6 +105,8 @@ public class Controller extends GameThread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            //--- recalculate exec time (as we hit a sleep)
+            execTime = System.currentTimeMillis() - temp;
         }
         if(player.started)
         {
