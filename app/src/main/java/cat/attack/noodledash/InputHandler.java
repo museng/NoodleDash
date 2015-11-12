@@ -51,30 +51,30 @@ public class InputHandler implements View.OnTouchListener {
                     if(dy > MIN_SWIPE_DIST) //--- Swiping up
                     {
                         target.controller.getPlayer().jump();
-                        Toast.makeText(target.getContext(), "Swipe Up", Toast.LENGTH_SHORT).show();
                     }
                     else if(-dy > MIN_SWIPE_DIST) //--- Swiping down
                     {
-                        Toast.makeText(target.getContext(),"Swipe Down",Toast.LENGTH_SHORT).show();
+
                     }
                     else if(dx > MIN_SWIPE_DIST) //--- Swiping left
                     {
-                        Toast.makeText(target.getContext(),"Swipe Left",Toast.LENGTH_SHORT).show();
+
                     }
                     else if (-dx > MIN_SWIPE_DIST) //--- Swiping right
                     {
-                        Toast.makeText(target.getContext(),"Swipe Right",Toast.LENGTH_SHORT).show();
+
                     }
                     else //--- Tapping
                     {
                         GamePoint location = new GamePoint((int)x1,(int)y1);
-                        if(location.isWithin(target.controller.getPlayer()))
+
+                        //--- check buttons
+                        for(Button button : target.controller.getButtons())
                         {
-                            Toast.makeText(target.getContext(),"Player Tap",Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(target.getContext(),"Screen Tap",Toast.LENGTH_SHORT).show();
+                            if(location.isWithin(button))
+                            {
+                                button.onClick();
+                            }
                         }
                     }
                     break;

@@ -6,8 +6,11 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
+import cat.attack.noodledash.API.ButtonClick;
+import cat.attack.noodledash.API.Element;
 import cat.attack.noodledash.API.GameThread;
 /**
  * Created by kegan on 11/8/2015.
@@ -22,6 +25,8 @@ public class Controller extends GameThread {
     private SurfaceHolder holder;
     private WindowManager windowManager;
     private Point WindowSize;
+
+    private ArrayList<Button> buttons = new ArrayList<Button>();
 
     private double targetFPS = 60.0;
     private long delay;
@@ -59,12 +64,32 @@ public class Controller extends GameThread {
         textPaint.setColor(Color.RED);
 
         // --- Define more constants
-        start = System.currentTimeMillis() + 10000;
+        start = System.currentTimeMillis();
         loading = true;
         holder = view.getHolder();
         delay = (long)Math.floor(1000.0 / targetFPS);
         execTime = 0;
     }
+    public ArrayList<Button> getButtons()
+    {
+        return buttons;
+    }
+    public void hideButtons()
+    {
+       buttons.clear();
+    }
+    public void initMainMenu()
+    {
+        // --- Define buttons
+        buttons.add(new Button(view, R.drawable.test, 15, 15, new ButtonClick() {
+            @Override
+            public void onClick(Element e, MainView v) {
+                v.controller.getPlayer().start();
+                v.controller.hideButtons();
+            }
+        }));
+    }
+
     @Override
     protected void loop()
     {
@@ -127,7 +152,7 @@ public class Controller extends GameThread {
     // --- Use this to initialize the player object map ect
     private void onGameInit()
     {
-        player.start();
+        initMainMenu();
     }
     // --- Ignore this (triggers drawLoading / drawGame)
     private void prepScreen(Canvas canvas)
@@ -164,7 +189,17 @@ public class Controller extends GameThread {
     // --- This is the game. This is run while the game is active (after loading screen)
     private void drawGame(Canvas canvas) {
         canvas.drawColor(Color.GREEN);
-        canvas.drawBitmap(player.getDisplay(), player.getPosition().x,player.getPosition().y,basePaint);
+        if(player.started)
+        {
+            canvas.drawBitmap(player.getDisplay(), player.getPosition().x,player.getPosition().y,basePaint);
+        }
+        if(buttons.size() > 0)
+        {
+            for(Button button : buttons)
+            {
+                canvas.drawBitmap(button.getDisplay(),button.getLocation().x,button.getLocation().y,basePaint);
+            }
+        }
     }
 
 }
