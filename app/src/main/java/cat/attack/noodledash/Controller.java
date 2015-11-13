@@ -21,8 +21,6 @@ public class Controller extends GameThread {
     private Paint textPaint;
 
     private Player player;
-    public Background background;
-
     private long start;
     private SurfaceHolder holder;
     private WindowManager windowManager;
@@ -50,10 +48,6 @@ public class Controller extends GameThread {
     }
 
     // --- GUI Controllers Below Here
-    public Point getWindowSize()
-    {
-        return WindowSize;
-    }
     public Controller(MainView _view)
     {
         view = _view;
@@ -90,7 +84,7 @@ public class Controller extends GameThread {
         buttons.add(new Button(view, R.drawable.test, 15, 15, new ButtonClick() {
             @Override
             public void onClick(Element e, MainView v) {
-                v.controller.onGameStarted();
+                v.controller.getPlayer().start();
                 v.controller.hideButtons();
             }
         }));
@@ -110,6 +104,8 @@ public class Controller extends GameThread {
             display.getSize(WindowSize);
             onSizeDetermined();
         }
+
+
 
 
         Canvas canvas = null;
@@ -140,7 +136,6 @@ public class Controller extends GameThread {
         if(player.started)
         {
             player.update(execTime);
-            background.update(execTime);
         }
     }
     // --- Here we can modify what determines when loading is over
@@ -149,18 +144,10 @@ public class Controller extends GameThread {
         return (System.currentTimeMillis() >= (start + 3000.0));
     }
 
-    private void onGameStarted()
-    {
-        player.start();
-        background.start();
-    }
-
     // --- Use this to initialize bitmaps once we have the correct screen size(should be almost immediate)
     private void onSizeDetermined()
     {
         temploading = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.test), WindowSize.x, WindowSize.y, false);
-
-        background = new Background(view);
     }
     // --- Use this to initialize the player object map ect
     private void onGameInit()
@@ -202,7 +189,6 @@ public class Controller extends GameThread {
     // --- This is the game. This is run while the game is active (after loading screen)
     private void drawGame(Canvas canvas) {
         canvas.drawColor(Color.GREEN);
-        canvas.drawBitmap(background.getDisplay(),background.getPosition().x,background.getPosition().y,basePaint);
         if(player.started)
         {
             canvas.drawBitmap(player.getDisplay(), player.getPosition().x,player.getPosition().y,basePaint);

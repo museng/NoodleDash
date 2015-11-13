@@ -27,7 +27,7 @@ public class Player extends Character {
     public void start()
     {
         this.setPosition(50, view.getHeight() - display.getHeight());
-        this.setVelocity(0, 0);
+        this.setVelocity(200, 0);
         this.setAcceleration(0, 0);
         started = true;
     }
