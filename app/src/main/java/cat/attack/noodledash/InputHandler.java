@@ -76,6 +76,10 @@ public class InputHandler implements View.OnTouchListener {
                                 button.onClick();
                             }
                         }
+                        if(location.isWithin(target.controller.background))
+                        {
+                            Toast.makeText(target.getContext(),"YOLO",Toast.LENGTH_SHORT);
+                        }
                     }
                     break;
                 }
