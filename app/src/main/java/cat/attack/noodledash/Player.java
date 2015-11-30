@@ -1,13 +1,17 @@
 package cat.attack.noodledash;
 
 import cat.attack.noodledash.API.Character;
+
 import android.graphics.*;
+
+import java.util.ArrayList;
 
 /**
  * Created by kegan on 11/8/2015.
  */
 public class Player extends Character {
     public boolean started;
+
     public Player(MainView _view)
     {
         super(_view,R.drawable.test,0,0);
@@ -34,8 +38,8 @@ public class Player extends Character {
     public void jump()
     {
         if(this.getVelocity()[1] == 0) {
-            this.setVelocity(this.getVelocity()[0], 200);
-            this.setAcceleration(this.getAcceleration()[0], -0.18);
+            this.setVelocity(this.getVelocity()[0], 400);
+            this.setAcceleration(this.getAcceleration()[0], -0.36);
         }
     }
     protected void onUpdate(long frameTime) {

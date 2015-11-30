@@ -8,7 +8,7 @@ import android.graphics.drawable.*;
 
 import cat.attack.noodledash.MainView;
 
-public abstract class Character extends Element {
+public abstract class Character extends UIElement {
     private double vX;
     private double vY;
     private double vXms;
@@ -35,16 +35,25 @@ public abstract class Character extends Element {
     private void updateImage()
     {
         display = BitmapFactory.decodeResource(view.getResources(),ResID);
+
+        super.setBounds((int) x, (int) y, display.getWidth(), display.getHeight());
+        super.setDisplay(display);
     }
     protected Bitmap display;
     protected int ResID;
     protected MainView view;
 
+    public void setImage(Bitmap image)
+    {
+        display = image;
+        super.setBounds((int) x, (int) y, display.getWidth(), display.getHeight());
+        super.setDisplay(display);
+    }
+
     public Character(MainView _view,int resource,int _x,int _y)
     {
-        super(_x,_y,0,0);
+        super(_view,_x,_y,0,0);
         view = _view;
-        updateResource(resource);
         x = _x;
         y = _y;
         vX = 0;
@@ -53,6 +62,7 @@ public abstract class Character extends Element {
         aY = 0;
         updateVms();
         updateAms();
+        updateResource(resource);
         //--- update bounds after element is finished
         super.setBounds(_x,_y,display.getWidth(),display.getHeight());
     }
@@ -60,7 +70,7 @@ public abstract class Character extends Element {
     {
         x = _x;
         y = _y;
-        super.setBounds((int)_x,(int)_y,display.getWidth(),display.getHeight());
+        super.setBounds((int) _x, (int) _y, display.getWidth(), display.getHeight());
     }
     public void setVelocity(double _vX,double _vY)
     {
@@ -84,18 +94,11 @@ public abstract class Character extends Element {
 
         x += vXms*frameTime;
         y += vYms*frameTime;
+
         super.setBounds((int)x,(int)y,display.getWidth(),display.getHeight());
 
 
         onUpdate(frameTime);
-    }
-    public Bitmap getDisplay()
-    {
-        return display;
-    }
-    public Point getPosition()
-    {
-        return new Point((int)Math.ceil(x),(int)Math.ceil(y));
     }
     public double[] getVelocity()
     {

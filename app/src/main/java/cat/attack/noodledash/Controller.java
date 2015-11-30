@@ -10,11 +10,14 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import cat.attack.noodledash.API.ButtonClick;
+import cat.attack.noodledash.API.ButtonHandler;
 import cat.attack.noodledash.API.Element;
 import cat.attack.noodledash.API.GameThread;
+
 /**
  * Created by kegan on 11/8/2015.
  */
+
 public class Controller extends GameThread {
     private MainView view;
     private Paint basePaint;
@@ -87,11 +90,23 @@ public class Controller extends GameThread {
     public void initMainMenu()
     {
         // --- Define buttons
-        buttons.add(new Button(view, R.drawable.test, 15, 15, new ButtonClick() {
+        buttons.add(new Button(this.view, R.drawable.dash, 200, 200, new ButtonClick() {
             @Override
             public void onClick(Element e, MainView v) {
                 v.controller.onGameStarted();
                 v.controller.hideButtons();
+            }
+        }, new ButtonHandler() {
+            @Override
+            public void OnDown(Element e, MainView v) {
+                Button b = (Button)e;
+                b.setDisplay(R.drawable.test); //--- LMFAO
+            }
+
+            @Override
+            public void OnUp(Element e, MainView v) {
+                Button b = (Button)e;
+                b.rollbackDisplay();
             }
         }));
     }
@@ -146,7 +161,7 @@ public class Controller extends GameThread {
     // --- Here we can modify what determines when loading is over
     private boolean doneLoading()
     {
-        return (System.currentTimeMillis() >= (start + 3000.0));
+        return (System.currentTimeMillis() >= (start + 5000.0));
     }
 
     private void onGameStarted()

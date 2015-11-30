@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
+import java.util.Random;
+
 import cat.attack.noodledash.API.*;
 import cat.attack.noodledash.API.Character;
 
@@ -22,20 +24,26 @@ public class Background extends Character {
 
         int gameWidth = 10;
 
+        int[] backgrounds = {R.drawable.palace,R.drawable.lightfield,R.drawable.darkfield,R.drawable.cave};
+
+        Random r = new Random();
+        int id = backgrounds[r.nextInt(backgrounds.length-1)];
+
+        updateResource(id);
+
         //--- initialize the actual display (so random order images & extend them ect
         display = Bitmap.createBitmap(view.controller.getWindowSize().x*gameWidth,view.controller.getWindowSize().y, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(display);
         for(int i = 0; i < gameWidth; i++)
         {
-            canvas.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.palace), view.controller.getWindowSize().x, view.controller.getWindowSize().y,false),view.controller.getWindowSize().x*i,0,bmpPaint);
+            canvas.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), id), view.controller.getWindowSize().x, view.controller.getWindowSize().y,false),view.controller.getWindowSize().x*i,0,bmpPaint);
         }
-        super.setBounds(0,0,display.getWidth(),display.getHeight());
-
+        super.setImage(display);
     }
 
     public void start()
     {
-        this.setVelocity(-100,0);
+        this.setVelocity(-200,0);
         this.setPosition(0,0);
     }
     public void speedup()
@@ -45,25 +53,6 @@ public class Background extends Character {
         this.setVelocity(velocity[0],velocity[1]);
     }
     protected void onUpdate(long frameTime) {
-        Point position = this.getPosition();
-        double[] velocity = this.getVelocity();
-        double[] acceleration = this.getAcceleration();
 
-        Point newP = new Point(position);
-        if(position.x > view.getWidth()) {
-            newP.x = 0;
-        }
-        if(position.y + display.getHeight() > view.getHeight())
-        {
-            newP.y = view.getHeight() - display.getHeight();
-            this.setVelocity(velocity[0], 0);
-            this.setAcceleration(acceleration[0], 0);
-        }
-
-        if(!newP.equals(position)) {
-
-            this.setPosition(newP.x,newP.y);
-
-        }
     }
 }

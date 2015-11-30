@@ -33,6 +33,16 @@ public class InputHandler implements View.OnTouchListener {
                     //--- capture start xy
                     y1 = event.getY();
                     x1 = event.getX();
+                    GamePoint location = new GamePoint((int)x1,(int)y1);
+
+                    //--- check buttons
+                    for(Button button : target.controller.getButtons())
+                    {
+                        if(location.isWithin(button))
+                        {
+                            button.onDown();
+                        }
+                    }
                     break;
                 }
                 //--- On finger move while down (animating sliders would use dis, use x1,y1 to get offset and use the dx dy to calcuate object newx and newy)
@@ -48,6 +58,13 @@ public class InputHandler implements View.OnTouchListener {
                     x2 = event.getX();
                     float dy = y1 - y2;
                     float dx = x1 - x2;
+                    for(Button button : target.controller.getButtons())
+                    {
+                        if(button.isDown())
+                        {
+                            button.onUp();
+                        }
+                    }
                     if(dy > MIN_SWIPE_DIST) //--- Swiping up
                     {
                         target.controller.getPlayer().jump();
