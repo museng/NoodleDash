@@ -14,7 +14,7 @@ public class Player extends Character {
 
     public Player(MainView _view)
     {
-        super(_view,R.drawable.test,0,0);
+        super(_view,R.drawable.man,0,0);
         started = false;
     }
 
@@ -30,7 +30,7 @@ public class Player extends Character {
 
     public void start()
     {
-        this.setPosition(50, view.getHeight() - display.getHeight());
+        this.setPosition(50, view.getHeight() - display.getHeight() - 16);
         this.setVelocity(0, 0);
         this.setAcceleration(0, 0);
         started = true;
@@ -51,9 +51,9 @@ public class Player extends Character {
         if(position.x > view.getWidth()) {
             newP.x = 0;
         }
-        if(position.y + display.getHeight() > view.getHeight())
+        if(position.y + display.getHeight() > view.getHeight() - 16)
         {
-            newP.y = view.getHeight() - display.getHeight();
+            newP.y = view.getHeight() - display.getHeight() - 16;
             this.setVelocity(velocity[0], 0);
             this.setAcceleration(acceleration[0], 0);
         }

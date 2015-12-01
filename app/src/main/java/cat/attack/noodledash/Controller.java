@@ -1,6 +1,7 @@
 package cat.attack.noodledash;
 
 import android.graphics.*;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -28,7 +29,6 @@ public class Controller extends GameThread {
 
     private long start;
     private SurfaceHolder holder;
-    private WindowManager windowManager;
     private Point WindowSize;
 
     private ArrayList<Button> buttons = new ArrayList<Button>();
@@ -36,6 +36,7 @@ public class Controller extends GameThread {
     private double targetFPS = 60.0;
     private long delay;
     private boolean loading;
+    private long looptime;
 
     private Bitmap temploading;
 
@@ -47,10 +48,6 @@ public class Controller extends GameThread {
         return player;
     }
     // --- Mutators
-    public void setWindowManager(WindowManager _windowManager)
-    {
-        windowManager = _windowManager;
-    }
 
     // --- GUI Controllers Below Here
     public Point getWindowSize()
@@ -61,6 +58,7 @@ public class Controller extends GameThread {
     {
         view = _view;
 
+        looptime = 0;
         // --- Initialize the player object & other objects
         player = new Player(_view);
 
@@ -118,14 +116,6 @@ public class Controller extends GameThread {
 
 
 
-        if(WindowSize == null && windowManager != null)
-        {
-            Display display = windowManager.getDefaultDisplay();
-            WindowSize = new Point();
-            display.getSize(WindowSize);
-            onSizeDetermined();
-        }
-
 
         Canvas canvas = null;
         try {
@@ -152,6 +142,16 @@ public class Controller extends GameThread {
             //--- recalculate exec time (as we hit a sleep)
             execTime = System.currentTimeMillis() - temp;
         }
+
+        looptime += execTime;
+        //--- TODO: Figure out how to detect when the screen finishes resizing instead of
+        if(looptime > 1000 && WindowSize == null)
+        {
+            WindowSize = new Point(0,0);
+            WindowSize.set(view.getWidth(),view.getHeight());
+            onSizeDetermined();
+        }
+
         if(player.started)
         {
             player.update(execTime);

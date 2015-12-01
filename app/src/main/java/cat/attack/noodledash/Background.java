@@ -33,10 +33,15 @@ public class Background extends Character {
 
         //--- initialize the actual display (so random order images & extend them ect
         display = Bitmap.createBitmap(view.controller.getWindowSize().x*gameWidth,view.controller.getWindowSize().y, Bitmap.Config.ARGB_8888);
+
+        Bitmap background = BitmapFactory.decodeResource(view.getResources(),id);
+        Bitmap scaledBackground = Bitmap.createScaledBitmap(background,view.controller.getWindowSize().x,view.controller.getWindowSize().y,false);
+
         Canvas canvas = new Canvas(display);
+        //canvas.drawBitmap(scaledBackground,view.controller.getWindowSize().x*gameWidth,0,bmpPaint);
         for(int i = 0; i < gameWidth; i++)
         {
-            canvas.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), id), view.controller.getWindowSize().x, view.controller.getWindowSize().y,false),view.controller.getWindowSize().x*i,0,bmpPaint);
+            canvas.drawBitmap(scaledBackground,view.controller.getWindowSize().x*i,0,bmpPaint);
         }
         super.setImage(display);
     }
@@ -52,7 +57,5 @@ public class Background extends Character {
         velocity[0] *= 1.2;
         this.setVelocity(velocity[0],velocity[1]);
     }
-    protected void onUpdate(long frameTime) {
-
-    }
+    protected void onUpdate(long frameTime) { }
 }

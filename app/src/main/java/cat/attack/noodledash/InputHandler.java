@@ -75,7 +75,7 @@ public class InputHandler implements View.OnTouchListener {
                     }
                     else if(dx > MIN_SWIPE_DIST) //--- Swiping left
                     {
-
+                        // (SPEEDUP TEST) target.controller.background.speedup();
                     }
                     else if (-dx > MIN_SWIPE_DIST) //--- Swiping right
                     {
@@ -93,11 +93,7 @@ public class InputHandler implements View.OnTouchListener {
                                 button.onClick();
                             }
                         }
-                        if(location.isWithin(target.controller.background))
-                        {
-                            Toast.makeText(target.getContext(),"YOLO",Toast.LENGTH_SHORT);
-                        }
-                    }
+                }
                     break;
                 }
             }
