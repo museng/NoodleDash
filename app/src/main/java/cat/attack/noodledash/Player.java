@@ -21,15 +21,13 @@ public class Player extends Character {
     @Override
     public Bitmap getDisplay()
     {
-        if(started) {
-            return super.getDisplay();
-        } else {
-            return Bitmap.createBitmap(view.getWidth(),view.getHeight(),Bitmap.Config.ARGB_8888);
-        }
+        return super.getDisplay();
     }
+
 
     public void start()
     {
+
         this.setPosition(50, view.getHeight() - display.getHeight() - 16);
         this.setVelocity(0, 0);
         this.setAcceleration(0, 0);
@@ -37,11 +35,19 @@ public class Player extends Character {
     }
     public void jump()
     {
+
+
+        double dy = 36*view.controller.percentScale;
+        double gav = -9.81*36*view.controller.percentScale;
+        double time = 0.5;
+        //--- TODO: solve for vi from equaltion
+
         if(this.getVelocity()[1] == 0) {
             this.setVelocity(this.getVelocity()[0], 400);
-            this.setAcceleration(this.getAcceleration()[0], -0.36);
+            this.setAcceleration(this.getAcceleration()[0], );
         }
     }
+
     protected void onUpdate(long frameTime) {
         Point position = this.getPosition();
         double[] velocity = this.getVelocity();

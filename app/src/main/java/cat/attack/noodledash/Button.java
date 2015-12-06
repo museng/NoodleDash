@@ -20,13 +20,14 @@ public class Button extends UIElement {
     private GamePoint location;
     private Bitmap display;
     private Bitmap oldDisplay;
+    public boolean toggled = false;
     public Button(MainView _view,int resource,int x,int y,ButtonClick callback, ButtonHandler callback2)
     {
         super(_view,x,y,0,0);
         view = _view;
         down = false;
         display = BitmapFactory.decodeResource(view.getResources(),resource);
-        display = Bitmap.createScaledBitmap(display,display.getWidth()*2,display.getHeight()*2,false);
+        display = Bitmap.createScaledBitmap(display,display.getWidth()*(int)view.controller.percentScale,display.getHeight()*(int)view.controller.percentScale,false);
         location = new GamePoint(x,y);
         onClickCallback = callback;
         onHandleCallback = callback2;
@@ -49,6 +50,7 @@ public class Button extends UIElement {
     {
         oldDisplay = display;
         display = BitmapFactory.decodeResource(view.getResources(),resource);
+        display = Bitmap.createScaledBitmap(display,display.getWidth()*(int)view.controller.percentScale,display.getHeight()*(int)view.controller.percentScale,false);
         super.setBounds(location.x,location.y,display.getWidth(),display.getHeight());
         super.setDisplay(display);
     }

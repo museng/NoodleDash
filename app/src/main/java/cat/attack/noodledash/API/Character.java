@@ -32,7 +32,7 @@ public abstract class Character extends UIElement {
         aXms = aX / 1000.0;
         aYms = aY / 1000.0;
     }
-    private void updateImage()
+    protected void updateImage()
     {
         display = BitmapFactory.decodeResource(view.getResources(),ResID);
 

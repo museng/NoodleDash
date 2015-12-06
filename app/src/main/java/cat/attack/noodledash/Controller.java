@@ -1,11 +1,15 @@
 package cat.attack.noodledash;
 
 import android.graphics.*;
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -31,16 +35,20 @@ public class Controller extends GameThread {
     private SurfaceHolder holder;
     private Point WindowSize;
 
+    private ArrayList<Button> permButtons = new ArrayList<Button>();
     private ArrayList<Button> buttons = new ArrayList<Button>();
 
     private double targetFPS = 60.0;
     private long delay;
     private boolean loading;
     private long looptime;
+    public double percentScale;
 
     private Bitmap temploading;
 
     private long execTime;
+
+    public MediaPlayer mp;
 
     // --- Access game options with these accessors
     public Player getPlayer()
@@ -57,11 +65,15 @@ public class Controller extends GameThread {
     public Controller(MainView _view)
     {
         view = _view;
-
+        percentScale = 0.0;
         looptime = 0;
         // --- Initialize the player object & other objects
         player = new Player(_view);
 
+        // --- Start music
+        mp = MediaPlayer.create(_view.getContext(),R.raw.music);
+        mp.setLooping(true);
+        mp.start();
         // --- Initialize the paints used for drawing
         basePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         basePaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -87,6 +99,32 @@ public class Controller extends GameThread {
     }
     public void initMainMenu()
     {
+        //--- add mute buttons (always visible)
+        permButtons.add(new Button(this.view, R.drawable.sound, 5, 5, new ButtonClick() {
+            @Override
+            public void onClick(Element e, MainView v) {
+                Button self = (Button)e;
+                self.toggled = !self.toggled;
+                if(self.toggled)
+                {
+                    self.setDisplay(R.drawable.sounddark);
+                    mp.pause();
+                }
+                else
+                {
+                    self.setDisplay(R.drawable.sound);
+                    mp.start();
+                }
+            }
+        }, new ButtonHandler() {
+            @Override
+            public void OnDown(Element e, MainView v) { }
+
+            @Override
+            public void OnUp(Element e, MainView v) { }
+        }));
+
+
         // --- Define buttons
         buttons.add(new Button(this.view, R.drawable.dash, 200, 200, new ButtonClick() {
             @Override
@@ -97,13 +135,13 @@ public class Controller extends GameThread {
         }, new ButtonHandler() {
             @Override
             public void OnDown(Element e, MainView v) {
-                Button b = (Button)e;
-                b.setDisplay(R.drawable.test); //--- LMFAO
+                Button b = (Button) e;
+                b.setDisplay(R.drawable.dashdark); //--- LMFAO
             }
 
             @Override
             public void OnUp(Element e, MainView v) {
-                Button b = (Button)e;
+                Button b = (Button) e;
                 b.rollbackDisplay();
             }
         }));
@@ -126,11 +164,11 @@ public class Controller extends GameThread {
                 drawFPS(canvas);
             }
         } finally {
-            if(canvas != null)
-            {
-                holder.unlockCanvasAndPost(canvas);
-            }
+        if(canvas != null)
+        {
+            holder.unlockCanvasAndPost(canvas);
         }
+    }
         execTime = System.currentTimeMillis() - temp;
         if(execTime < delay)
         {
@@ -173,8 +211,13 @@ public class Controller extends GameThread {
     // --- Use this to initialize bitmaps once we have the correct screen size(should be almost immediate)
     private void onSizeDetermined()
     {
+        //TINKERING ABOOT
         temploading = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.test), WindowSize.x, WindowSize.y, false);
+        percentScale = (double) WindowSize.y / 450;
 
+        int h = player.getDisplay().getHeight();
+        Bitmap newD =  Bitmap.createScaledBitmap(player.getDisplay(),(int) (player.getDisplay().getWidth()*percentScale),(int) (player.getDisplay().getHeight()*percentScale),false);
+        player.setImage(newD);
         background = new Background(view);
     }
     // --- Use this to initialize the player object map ect
@@ -217,7 +260,7 @@ public class Controller extends GameThread {
     // --- This is the game. This is run while the game is active (after loading screen)
     private void drawGame(Canvas canvas) {
         canvas.drawColor(Color.GREEN);
-        canvas.drawBitmap(background.getDisplay(),background.getPosition().x,background.getPosition().y,basePaint);
+        canvas.drawBitmap(background.getDisplay(), background.getPosition().x, background.getPosition().y, basePaint);
         if(player.started)
         {
             canvas.drawBitmap(player.getDisplay(), player.getPosition().x,player.getPosition().y,basePaint);
@@ -229,6 +272,15 @@ public class Controller extends GameThread {
                 canvas.drawBitmap(button.getDisplay(),button.getLocation().x,button.getLocation().y,basePaint);
             }
         }
+
+        for(Button button : permButtons)
+        {
+            canvas.drawBitmap(button.getDisplay(),button.getLocation().x,button.getLocation().y,basePaint);
+        }
+
     }
 
+    public ArrayList<Button> getPermButtons() {
+        return permButtons;
+    }
 }

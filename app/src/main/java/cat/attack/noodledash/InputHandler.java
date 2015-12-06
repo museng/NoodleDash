@@ -93,6 +93,13 @@ public class InputHandler implements View.OnTouchListener {
                                 button.onClick();
                             }
                         }
+                        for(Button button : target.controller.getPermButtons())
+                        {
+                            if(location.isWithin(button))
+                            {
+                                button.onClick();
+                            }
+                        }
                 }
                     break;
                 }
