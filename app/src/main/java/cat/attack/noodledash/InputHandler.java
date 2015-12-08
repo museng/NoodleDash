@@ -67,7 +67,18 @@ public class InputHandler implements View.OnTouchListener {
                     }
                     if(dy > MIN_SWIPE_DIST) //--- Swiping up
                     {
-                        target.controller.getPlayer().jump();
+                        if(target.controller.getPlayer().started) {
+
+
+                            if (target.controller.getPlayer().jumping) {
+                                if (target.controller.getPlayer().canDJump) {
+                                    target.controller.getPlayer().dJump();
+                                }
+                            } else {
+                                target.controller.getPlayer().jump();
+                            }
+
+                        }
                     }
                     else if(-dy > MIN_SWIPE_DIST) //--- Swiping down
                     {

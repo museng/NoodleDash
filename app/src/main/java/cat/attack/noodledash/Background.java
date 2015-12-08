@@ -22,7 +22,7 @@ public class Background extends Character {
         bmpPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bmpPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-        int gameWidth = 10;
+        int gameWidth = 2;
 
         int[] backgrounds = {R.drawable.palace,R.drawable.lightfield,R.drawable.darkfield,R.drawable.cave};
 

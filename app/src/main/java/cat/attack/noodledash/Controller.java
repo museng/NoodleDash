@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 import cat.attack.noodledash.API.ButtonClick;
 import cat.attack.noodledash.API.ButtonHandler;
@@ -71,7 +72,12 @@ public class Controller extends GameThread {
         player = new Player(_view);
 
         // --- Start music
-        mp = MediaPlayer.create(_view.getContext(),R.raw.music);
+        int num = (new Random()).nextInt();
+        int music = R.raw.music;
+        if(num == 1) {
+            music = R.raw.music2;
+        }
+        mp = MediaPlayer.create(_view.getContext(),music);
         mp.setLooping(true);
         mp.start();
         // --- Initialize the paints used for drawing
@@ -86,6 +92,8 @@ public class Controller extends GameThread {
         start = System.currentTimeMillis();
         loading = true;
         holder = view.getHolder();
+        holder.setFormat(0x00000004);
+
         delay = (long)Math.floor(1000.0 / targetFPS);
         execTime = 0;
     }
@@ -261,6 +269,7 @@ public class Controller extends GameThread {
     private void drawGame(Canvas canvas) {
         canvas.drawColor(Color.GREEN);
         canvas.drawBitmap(background.getDisplay(), background.getPosition().x, background.getPosition().y, basePaint);
+
         if(player.started)
         {
             canvas.drawBitmap(player.getDisplay(), player.getPosition().x,player.getPosition().y,basePaint);
